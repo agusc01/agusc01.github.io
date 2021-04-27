@@ -4,6 +4,11 @@
     box-sizing: border-box;
 }
 
+@font-face {
+    font-family: Inconsolata;
+    src: url("../fonts/Inconsolata-VariableFont_wdth\,wght.ttf");
+}
+
 body{
     background-image: url("../images/warty-final-ubuntu.png");
     background-size: cover;
@@ -68,4 +73,16 @@ main{
 
 .header-buttons:nth-child(3){
     right: 0px
+}
+
+#terminal-text{
+    font-family: Inconsolata, 'Times New Roman', Times, serif;
+    color: lime;
+    padding: 5px;
+    font-size: 1.2rem;
+}
+
+#command-text{
+    /* white-space: pre-wrap; */
+    /* word-wrap: normal; */
 }
