@@ -82,3 +82,6 @@ main{
     font-size: 1.2rem;
 }
 
+#command-text{
+    white-space: pre-wrap;
+}
