@@ -4,19 +4,25 @@ function ()
     let defaultTextTerminal = "guest-user@pc-agustin:/$ ";
     document.querySelector("#default-text").innerHTML=defaultTextTerminal;
     let terminalWindow = document.querySelector("#terminal-window");
-    let terminalText = document.querySelector("#terminal-text");
-    let commandText  = document.querySelector("#command-text");
-    let inputText = document.querySelector("#input-text");
+    let allTextInTheTerminal  = document.querySelector("#command-text");
+    let inputCommand = document.querySelector("#input-text");
+
+    commands = {
+                 "help" : "Available commands... ",
+                 "whoami" : "My name's Agustin."
+                }
+
+
 
     //addEventListener =========================================================
     terminalWindow.addEventListener("click",startTerminal,false);
-    inputText.addEventListener("input",writeInConsole,false);
-
+    inputCommand.addEventListener("input",writeInConsole,false);
+    inputCommand.addEventListener("keyup",writingInCosole,false);
 
     //functions ================================================================
     function startTerminal()
     {
-        inputText.focus();    
+        inputCommand.focus();    
     }
 
     function writeInConsole()
@@ -26,7 +32,7 @@ function ()
         let length;
         let currentCommand;
 
-        currentText = commandText.innerHTML.split("\n");
+        currentText = allTextInTheTerminal.innerHTML.split("\n");
         newText = "";
         length = currentText.length-1;
         
@@ -36,11 +42,58 @@ function ()
             newText += currentText[x] + "\n";
         }
 
-        currentCommand = inputText.value.toLowerCase() //with this always write in lowercase
+        currentCommand = inputCommand.value.toLowerCase() //with this always write in lowercase
         newText += defaultTextTerminal + currentCommand + "█";
-        commandText.innerHTML = newText;
+        allTextInTheTerminal.innerHTML = newText;
     }
 
+    function runCommand(command)
+    {
+        let commandOutput=commands[command];
+    
+        if(commandOutput == undefined)
+        {
+            commandOutput = command+ ": command not found\n";
+        }
+        else
+        {
+            commandOutput = commandOutput + "\n";
+        }
+        return commandOutput
+    }
+
+    function writingInCosole(e)
+    {
+        if(e.keyCode==13)//if press enter
+        {
+            let currentText;
+            let currentCommand;
+
+            currentText = allTextInTheTerminal.innerHTML.replace("█","").split("\n");
+            currentCommand = currentText[currentText.length - 1].replace(defaultTextTerminal, "").trim();
+
+            switch (currentCommand) 
+            {
+                case "clear":
+                    allTextInTheTerminal.innerHTML=defaultTextTerminal;
+                break;
+                
+                default:
+                    let command;
+                    let newText;
+
+                    command = runCommand(currentCommand);
+        
+                    newText = allTextInTheTerminal.innerHTML.replace("█","") +"\n";
+                    newText += command + defaultTextTerminal + "█";
+        
+                    allTextInTheTerminal.innerHTML = newText ;
+                    break;
+            }
+
+            inputCommand.value="";//clean the last commnad
+        }
+    }
 
     //function calls ===========================================================
 
