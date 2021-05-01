@@ -85,3 +85,10 @@ main{
 #command-text{
     white-space: pre-wrap;
 }
+
+.close-terminal{
+    opacity: 0;
+    width: 0!important;
+    height: 0!important;
+    transition: opacity 1s, width 1s, height 1s;
+}

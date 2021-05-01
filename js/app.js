@@ -1,11 +1,12 @@
 window.addEventListener("load",
 function () 
 {
-    let defaultTextTerminal = "guest-user@pc-agustin:/$ ";
+    const defaultTextTerminal = "guest-user@pc-agustin:/$ ";
     document.querySelector("#default-text").innerHTML=defaultTextTerminal;
     let terminalWindow = document.querySelector("#terminal-window");
     let allTextInTheTerminal  = document.querySelector("#command-text");
     let inputCommand = document.querySelector("#input-text");
+    const closeButton = document.querySelector("#close-terminal");
 
     commands = {
                  "help" : "Available commands... ",
@@ -18,6 +19,7 @@ function ()
     terminalWindow.addEventListener("click",startTerminal,false);
     inputCommand.addEventListener("input",writeInConsole,false);
     inputCommand.addEventListener("keyup",writingInCosole,false);
+    closeButton.addEventListener("click",closeTerminal,false);
 
     //functions ================================================================
     function startTerminal()
@@ -78,6 +80,11 @@ function ()
                     allTextInTheTerminal.innerHTML=defaultTextTerminal;
                 break;
                 
+                case "logout":
+                case "exit":
+                    closeTerminal();
+                    break;
+
                 default:
                     let command;
                     let newText;
@@ -93,6 +100,12 @@ function ()
 
             inputCommand.value="";//clean the last commnad
         }
+    }
+
+
+    function closeTerminal()
+    {
+        terminalWindow.classList.add("close-terminal");
     }
 
     //function calls ===========================================================
