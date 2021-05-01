@@ -7,6 +7,7 @@ function ()
     let allTextInTheTerminal  = document.querySelector("#command-text");
     let inputCommand = document.querySelector("#input-text");
     const closeButton = document.querySelector("#close-terminal");
+    const body = document.querySelector("body");
 
     commands = {
                  "help" : "Available commands... ",
@@ -20,6 +21,7 @@ function ()
     inputCommand.addEventListener("input",writeInConsole,false);
     inputCommand.addEventListener("keyup",writingInCosole,false);
     closeButton.addEventListener("click",closeTerminal,false);
+    body.addEventListener("keyup",openTerminal,false);
 
     //functions ================================================================
     function startTerminal()
@@ -97,7 +99,6 @@ function ()
                     allTextInTheTerminal.innerHTML = newText ;
                     break;
             }
-
             inputCommand.value="";//clean the last commnad
         }
     }
@@ -108,7 +109,18 @@ function ()
         terminalWindow.classList.add("close-terminal");
     }
 
+    function openTerminal(event)
+    {
+        if(event.key == 't' && terminalWindow.style.opacity == "" )
+        {
+            terminalWindow.classList.remove("close-terminal");
+            inputCommand.value="";//for security is you open the terminal and you're inputCommand.focus()
+            startTerminal();
+        }
+    }
+
     //function calls ===========================================================
+
 
 
 
