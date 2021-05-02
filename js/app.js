@@ -3,11 +3,12 @@ function ()
 {
     const defaultTextTerminal = "guest-user@pc-agustin:/$ ";
     document.querySelector("#default-text").innerHTML=defaultTextTerminal;
-    let terminalWindow = document.querySelector("#terminal-window");
-    let allTextInTheTerminal  = document.querySelector("#command-text");
-    let inputCommand = document.querySelector("#input-text");
+    const terminalWindow = document.querySelector("#terminal-window");
+    const allTextInTheTerminal  = document.querySelector("#command-text");
+    const inputCommand = document.querySelector("#input-text");
     const closeButton = document.querySelector("#close-terminal");
     const body = document.querySelector("body");
+    let   displayTerminal = true;
 
     commands = {
                  "help" : "Available commands... ",
@@ -107,15 +108,18 @@ function ()
     function closeTerminal()
     {
         terminalWindow.classList.add("close-terminal");
+        displayTerminal=false;
     }
 
     function openTerminal(event)
     {
-        if(event.key == 't' && terminalWindow.style.opacity == "" )
+        if(displayTerminal == false && event.key == 't')
         {
+            displayTerminal=true;
             terminalWindow.classList.remove("close-terminal");
             inputCommand.value="";//for security is you open the terminal and you're inputCommand.focus()
             startTerminal();
+            writeInConsole();//fix bug "show t when open the terminal"
         }
     }
 
