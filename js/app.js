@@ -1,141 +1,173 @@
-window.addEventListener("load",
-function () 
+ 
+let defacultTextTerminal = "guest-user@pc-agustin:/$ ";
+document.querySelector("#default-text").innerHTML = defacultTextTerminal;
+let terminalWindow = document.querySelector("#terminal-window");
+let terminalText = document.querySelector("#terminal-text");
+let commandText = document.querySelector("#command-text");
+let dummyTextInput = document.querySelector("#dummy-text-input");
+let body = document.querySelector("body");
+let fixBugFirstCommand = true; //pending task, to fix this bug. Now it's a feature LOL
+let blickState = false;
+
+commands = 
 {
-    const defaultTextTerminal = "guest-user@pc-agustin:/$ ";
-    document.querySelector("#default-text").innerHTML=defaultTextTerminal;
-    const terminalWindow = document.querySelector("#terminal-window");
-    const allTextInTheTerminal  = document.querySelector("#command-text");
-    const inputCommand = document.querySelector("#input-text");
-    const closeButton = document.querySelector("#close-terminal");
-    const body = document.querySelector("body");
-    let   displayTerminal = true;
+    "help" : "Available commands\n\twhoami\n\tuname -o\n\tskills\n\tdate\n\tbash --version\n\tlogo\n\tpwd\n\thack-nasa --later\n\thack-nasa --now",
+    "whoami" : "My name is Agustin. I love coding",
+    "uname -o" : "GNU/Linux",
+    "skills" : "python, c, bash, vanilla javascript, PHP & MySQL",
+    "bash --version" : "CV bash, version 0.0.1\n<a href='http://gnu.org/licenses/gpl.html' target='__blank'>License GPLv3+: GNU GPL version 3 or later</a>\nThis is free software; you are free to change and redistribute it",
+    "logo" : "                          ./+o+-     \n                  yyyyy- -yyyyyy+     \n               ://+//////-yyyyyyo     \n           .++ .:/++++++/-.+sss/`     \n         .:++o:  /++++++++/:--:/-     \n        o:+o+:++.`..```.-/oo+++++/    \n       .:+o:+o/.          `+sssoo+/   \n  .++/+:+oo+o:`             /sssooo.  \n /+++//+:`oo+o               /::--:.  \n \+/+o+++`o++o               ++////.  \n  .++.o+++oo+:`             /dddhhh.  \n       .+.o+oo:.          `oddhhhh+   \n        \+.++o+o``-````.:ohdhhhhh+    \n         `:o+++ `ohhhhhhhhyo++os:     \n           .o:`.syhhhhhhh/.oo++o`     \n               /osyyyyyyo++ooo+++/    \n                   ````` +oo+++o\:    \n                          `oo++.      \n",
+    "pwd" : "/",
+    "hack-nasa --later" : "Ok, We'll hack NASA later...\n",
+    "hack-nasa --now" : "It's not posible now, try later...\n",
+}
 
-    commands = {
-                 "help" : "Available commands... ",
-                 "whoami" : "My name's Agustin."
-                }
-
+dummyTextInput.addEventListener('input',writeInConsole,false);
 
 
-    //addEventListener =========================================================
-    terminalWindow.addEventListener("click",startTerminal,false);
-    inputCommand.addEventListener("input",writeInConsole,false);
-    inputCommand.addEventListener("keyup",writingInCosole,false);
-    closeButton.addEventListener("click",closeTerminal,false);
-    body.addEventListener("keyup",openTerminal,false);
-
-    //functions ================================================================
-    function startTerminal()
-    {
-        inputCommand.focus();    
-    }
-
-    function writeInConsole()
-    {
-        let currentText;
-        let newText;
-        let length;
-        let currentCommand;
-
-        currentText = allTextInTheTerminal.innerHTML.split("\n");
-        newText = "";
-        length = currentText.length-1;
-        
-        //for no clean the screen when your insert a new character
-        for (x=0; x<length; x++)
-        {
-            newText += currentText[x] + "\n";
-        }
-
-        currentCommand = inputCommand.value.toLowerCase() //with this always write in lowercase
-        newText += defaultTextTerminal + currentCommand + "█";
-        allTextInTheTerminal.innerHTML = newText;
-    }
-
-    function runCommand(command)
-    {
-        let commandOutput=commands[command];
+function runCommand(command)
+{
+    let commandOutput=commands[command];
     
-        if(commandOutput == undefined)
-        {
-            commandOutput = command+ ": command not found\n";
-        }
-        else
-        {
-            commandOutput = commandOutput + "\n";
-        }
-        return commandOutput
+    if(commandOutput == undefined)
+    {
+        commandOutput = command+ ": command not found\n";
+    }
+    else
+    {
+        commandOutput = commandOutput + "\n";
+    }
+    return commandOutput
+}
+
+function writeInConsole()
+{
+    let currentText;
+    let newText;
+    let length;
+    let currentCommand;
+
+    currentText = commandText.innerHTML.split("\n");
+    newText = "";
+
+    if(fixBugFirstCommand==true)
+    {
+        length = currentText.length-2;
+        fixBugFirstCommand=false;
+    }
+    else
+    {
+        length = currentText.length-1;
+    }
+    
+    //for no clean the screen when your insert a new character
+    for (x=0; x<length; x++)
+    {
+        newText += currentText[x] + "\n";
     }
 
-    function writingInCosole(e)
+    currentCommand = dummyTextInput.value.toLowerCase() //with this always write in lowercase
+
+    newText += defacultTextTerminal + currentCommand + "█";
+
+    commandText.innerHTML = newText;
+    
+}
+
+dummyTextInput.addEventListener("keyup", 
+    function(event)
     {
-        if(e.keyCode==13)//if press enter
+        if(event.keyCode==13)//if press enter
         {
             let currentText;
             let currentCommand;
-
-            currentText = allTextInTheTerminal.innerHTML.replace("█","").split("\n");
-            currentCommand = currentText[currentText.length - 1].replace(defaultTextTerminal, "").trim();
-
+            
+            currentText = commandText.innerHTML.replace("█","").split("\n");
+            currentCommand = currentText[currentText.length - 1].replace(defacultTextTerminal, "").trim();
+            
             switch (currentCommand) 
             {
                 case "clear":
-                    allTextInTheTerminal.innerHTML=defaultTextTerminal;
-                break;
-                
-                case "logout":
-                case "exit":
-                    closeTerminal();
+                    commandText.innerHTML=defacultTextTerminal;
                     break;
-
+                case "exit":
+                case "logout":
+                    closeTerminal();
+                    break;            
                 default:
                     let command;
                     let newText;
-
-                    command = runCommand(currentCommand);
         
-                    newText = allTextInTheTerminal.innerHTML.replace("█","") +"\n";
-                    newText += command + defaultTextTerminal + "█";
+                    if(currentCommand == "date")
+                    {
+                        command = new Date() + "\n";
+                    }
+                    else
+                    {
+                        command = runCommand(currentCommand);
+                    }
         
-                    allTextInTheTerminal.innerHTML = newText ;
+                    newText = commandText.innerHTML.replace("█","") + "\n";
+                    newText += command + defacultTextTerminal + "█";
+        
+                    commandText.innerHTML = newText;
                     break;
             }
-            inputCommand.value="";//clean the last commnad
+            
+            console.log("Command to execute: " + currentCommand);
+            dummyTextInput.value="";//clean last command to be ready to the next command
+
         }
     }
+,false);
 
-
-    function closeTerminal()
+body.addEventListener("keyup",
+    function(event)
     {
-        terminalWindow.classList.add("close-terminal");
-        displayTerminal=false;
-    }
-
-    function openTerminal(event)
-    {
-        if(displayTerminal == false && event.key == 't')
+        if(event.key == 't' && terminalWindow.style.opacity == "" )
         {
-            displayTerminal=true;
-            terminalWindow.classList.remove("close-terminal");
-            inputCommand.value="";//for security is you open the terminal and you're inputCommand.focus()
-            startTerminal();
-            writeInConsole();//fix bug "show t when open the terminal"
+            openTerminal();
         }
     }
+,false);
 
-    //function calls ===========================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
+writeInConsole();//fixed first blinkCursor (if it doesn't appear, the first blick position is incorrect, and the text too)
+function blinkCursor()
+{
+    let currentText = commandText.innerHTML.replace("█","")
+    if(blickState)
+    {
+        currentText += "█";
+    }
+    commandText.innerHTML = currentText;
+    blickState = !blickState;
 }
-,false);//end window.addEventListener("load",
+
+setInterval(blinkCursor, 700);
+
+dummyTextInput.focus();
+
+terminalWindow.addEventListener("click",
+    function ()
+    {
+        dummyTextInput.focus();
+    },
+false);
+
+
+function closeTerminal()
+{
+    // terminalWindow.classList.remove('show');
+    terminalWindow.classList.add('hide');
+}
+
+function openTerminal()
+{
+    writeInConsole();
+    terminalWindow.classList.add('show');
+    terminalWindow.classList.remove('hide');
+    terminalWindow.classList.remove('show');
+    dummyTextInput.focus();
+}
+
+
